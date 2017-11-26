@@ -7,6 +7,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.kuari.v3bigdata.R;
+import in.kuari.v3bigdata.adapter.PostsFeedAdapter;
 import in.kuari.v3bigdata.firebase.FirebaseHelper;
-import in.kuari.v3bigdata.model.NavMenu;
+import in.kuari.v3bigdata.model.Question;
+import in.kuari.v3bigdata.model.SubjAnswer;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView tv=findViewById(R.id.tv);
+     //   TextView tv=findViewById(R.id.tv);
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -38,9 +42,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        List<NavMenu> menus=new ArrayList<>();
-        NavMenu menu=new NavMenu(1,"https://cdn.onlinewebfonts.com/svg/img_253306.png","Option1");
-        NavMenu menu2=new NavMenu(1,"https://cdn.onlinewebfonts.com/svg/img_253306.png", "option2");
 
         FirebaseHelper helper=new FirebaseHelper(this);
 
@@ -49,13 +50,34 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
 
 
-        helper.getMenuList(navigationView,tv,dialog);
-    }
+        helper.getMenuList(navigationView,dialog);
 
+
+
+
+        RecyclerView rv = findViewById(R.id.allpost);
+        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
+        rv.setLayoutManager(layoutManager);
+        List<Question> posts=getListOfPost();
+        PostsFeedAdapter postFeedAdapter = new PostsFeedAdapter(this,posts);
+        rv.setAdapter(postFeedAdapter);
+    }
+//temp method
+
+    List<Question> getListOfPost(){
+        List<Question> posts=new ArrayList<>();
+        SubjAnswer answer=new SubjAnswer(1,"Pub-Sub message broker");
+        Question q=new Question(2,"What is Kafka?",answer,"Ketan","27-11-2017");
+
+
+        posts.add(q);
+        posts.add(q);
+        return posts;
+    }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

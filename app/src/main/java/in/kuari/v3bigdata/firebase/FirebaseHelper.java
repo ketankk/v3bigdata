@@ -9,6 +9,8 @@ import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -69,10 +71,16 @@ public class FirebaseHelper {
         Menu menu = navigationView.getMenu();
         for(NavMenu navMenu:menus) {
 
-            String ImageURL=navMenu.getIconUrl();
+            final MenuItem menuItem = menu.add(R.id.topicList, Menu.NONE, Menu.NONE, "");
 
-            final MenuItem menuItem = menu.add(R.id.topicList, Menu.NONE, Menu.NONE, "")
-                    .setTitle(navMenu.getTitle());
+            menuItem.setTitle(navMenu.getTitle());
+            menuItem.setActionView(R.layout.checkbox);
+            //set id for each checkbox
+            menuItem.getActionView().setId(navMenu.getId());
+
+            String ImageURL=navMenu.getIcon();
+
+
             Picasso.with(context)
                     .load(ImageURL)
                     .into(new Target() {
@@ -97,9 +105,11 @@ public class FirebaseHelper {
 
     }
 
-    public void getMenuList(final NavigationView navigationView,final TextView tv,final ProgressDialog dialog){
+    public void getMenuList(final NavigationView navigationView,final ProgressDialog dialog){
         DatabaseReference dbRef=database.getReference("view").child("navmenulist");
-        dbRef.addValueEventListener(new ValueEventListener() {
+        dbRef.keepSynced(true);
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<NavMenu> navMenus=new ArrayList<>();
@@ -110,7 +120,9 @@ public class FirebaseHelper {
 
                 }
                 populateMenu( navigationView,navMenus);
-                tv.setText(navMenus.toString());
+                CheckBox view = (CheckBox) navigationView.getMenu().getItem(2).getActionView();
+               view.setChecked(true);
+
                 dialog.hide();
 
 

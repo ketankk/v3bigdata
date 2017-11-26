@@ -5,28 +5,28 @@ package in.kuari.v3bigdata.model;
  * Created by ketan on 25/11/17.
  */
 public class NavMenu {
-    private long id;
+    private int id;
     private String icon;
     private String title;
     private boolean checkBox;
     public NavMenu(){
 
     }
-    public NavMenu(long id, String icon, String title) {
+    public NavMenu(int id, String icon, String title) {
         this.id = id;
         this.icon = icon;
         this.title = title;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getIconUrl() {
+    public String getIcon() {
         return icon;
     }
 
@@ -60,3 +60,7 @@ public class NavMenu {
                 '}';
     }
 }
+   /* List<NavMenu> menus=new ArrayList<>();
+    NavMenu menu=new NavMenu(1,"https://cdn.onlinewebfonts.com/svg/img_253306.png","Option1");
+    NavMenu menu2=new NavMenu(1,"https://cdn.onlinewebfonts.com/svg/img_253306.png", "option2");
+*/

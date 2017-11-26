@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="1dp"
+    app:cardElevation="3dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/postTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Why Kafka is used"
+        android:textSize="30dp"
+        />
+    <TextView
+        android:id="@+id/postText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kafka is used as messaging Queue"
+        android:textSize="20dp"
+        android:layout_below="@+id/postTitle"
+        />
+    <RelativeLayout
+        android:layout_below="@+id/postText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/postedOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="26-11-2017"
+            android:textSize="10dp"
+            />
+        <TextView
+            android:id="@+id/postedBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="ketan"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+</RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,9 +1,6 @@
 package in.kuari.v3bigdata.model;
 
-import com.google.firebase.database.Exclude;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by ketan on 25/11/17.
@@ -11,37 +8,53 @@ import java.util.Map;
 
 public class Post {
 
+    private long postId;
+    private User postedBy;
+    private String postedOn;
+    List<String> tags;
 
-        public String uid;
-        public String author;
-        public String title;
-        public String body;
-        public int starCount = 0;
-        public Map<String, Boolean> stars = new HashMap<>();
-
-        public Post() {
-            // Default constructor required for calls to DataSnapshot.getValue(Post.class)
-        }
-
-        public Post(String uid, String author, String title, String body) {
-            this.uid = uid;
-            this.author = author;
-            this.title = title;
-            this.body = body;
-        }
-
-        @Exclude
-        public Map<String, Object> toMap() {
-            HashMap<String, Object> result = new HashMap<>();
-            result.put("uid", uid);
-            result.put("author", author);
-            result.put("title", title);
-            result.put("body", body);
-            result.put("starCount", starCount);
-            result.put("stars", stars);
-
-            return result;
-        }
-
+    public Post() {
     }
+
+    public Post(long postId,String postedBy, String postedOn) {
+        this.postId=postId;
+        this.postedBy = new User(postedBy);
+        this.postedOn = postedOn;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
+    }
+
+    public User getPostedBy() {
+        return postedBy;
+    }
+
+    public void setPostedBy(User postedBy) {
+        this.postedBy = postedBy;
+    }
+
+
+    public String getPostedOn() {
+        return postedOn;
+    }
+
+    public void setPostedOn(String postedOn) {
+        this.postedOn = postedOn;
+    }
+}
+
+
 
