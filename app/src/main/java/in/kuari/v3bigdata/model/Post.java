@@ -1,17 +1,19 @@
 package in.kuari.v3bigdata.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by ketan on 25/11/17.
  */
 
-public class Post {
+public class Post implements Serializable {
 
     private long postId;
+    private String postTitle;
     private User postedBy;
     private String postedOn;
-    List<String> tags;
+    private List<String> tags;
 
     public Post() {
     }
@@ -20,6 +22,14 @@ public class Post {
         this.postId=postId;
         this.postedBy = new User(postedBy);
         this.postedOn = postedOn;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 
     public List<String> getTags() {

@@ -1,10 +1,12 @@
 package in.kuari.v3bigdata.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ketan on 26/11/17.
  */
 
-public class User{
+public class User implements Serializable{
 
     public User(String name) {
         this.name = name;

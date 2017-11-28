@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +69,10 @@ public class MainActivity extends AppCompatActivity
         Question q=new Question(2,"What is Kafka?",answer,"Ketan","27-11-2017");
 
 
+        posts.add(q);
+        posts.add(q);
+        posts.add(q);
+        posts.add(q);
         posts.add(q);
         posts.add(q);
         return posts;

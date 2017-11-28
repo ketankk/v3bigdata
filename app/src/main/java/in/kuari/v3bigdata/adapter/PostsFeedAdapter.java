@@ -101,6 +101,8 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
     private void openPostPage(Post post) {
         Intent intent=new Intent(context, FullPostActivity.class);
         intent.putExtra("postId",post.getPostId());
+
+        intent.putExtra("obj",post);
         context.startActivity(intent);
     }
 
