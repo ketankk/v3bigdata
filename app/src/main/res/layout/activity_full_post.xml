@@ -13,6 +13,7 @@
 
         >
         <TextView
+            android:id="@+id/postedOn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DD-MM-YYYY"
@@ -22,6 +23,7 @@
 
             />
         <TextView
+            android:id="@+id/postedBy"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

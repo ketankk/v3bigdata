@@ -35,15 +35,8 @@ public class FullPostActivity extends AppCompatActivity {
 
             }
         }
-
-
-
-
-        Toast.makeText(this,"POST "+post.toString(),Toast.LENGTH_LONG).show();
-
-
-
-    }
+        //Toast.makeText(this,"POST "+post.toString(),Toast.LENGTH_LONG).show();
+}
 
     private void setSubjAnswerQuesView(Question question) {
         setContentView(R.layout.activity_full_post);
@@ -52,6 +45,10 @@ public class FullPostActivity extends AppCompatActivity {
         postText.setText(question.getQuestion());
         TextView answer = findViewById(R.id.answer);
         answer.setText(((SubjAnswer)question.getAnswer()).getAnswerText());
+        TextView postedOn = findViewById(R.id.postedOn);
+        postedOn.setText(question.getPostedOn());
+        TextView postedBy = findViewById(R.id.postedBy);
+        postedBy.setText(question.getPostedBy().getName());
 
     }
 }

@@ -13,7 +13,7 @@ public class Utility {
     /*public static void main(String[] args) throws ParseException {
         System.out.print(timeToAgo("2017-11-11"));
     }*/
-  public   static String timeToAgo(String time) throws ParseException {
+    public   static String timeAgo(String time) throws ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         long timestamp = sdf.parse(time).getTime();
         //  long ti = System.currentTimeMillis() - 10000;

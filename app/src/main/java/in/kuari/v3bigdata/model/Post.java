@@ -1,7 +1,10 @@
 package in.kuari.v3bigdata.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.List;
+
+import in.kuari.v3bigdata.utils.Utility;
 
 /**
  * Created by ketan on 25/11/17.
@@ -58,6 +61,13 @@ public class Post implements Serializable {
 
 
     public String getPostedOn() {
+        try {
+            String pon=Utility.timeAgo(postedOn);
+            return pon;
+        } catch (ParseException e) {
+
+
+        }
         return postedOn;
     }
 

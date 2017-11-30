@@ -13,12 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.adapter.PostsFeedAdapter;
 import in.kuari.v3bigdata.firebase.FirebaseHelper;
+import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.Question;
 import in.kuari.v3bigdata.model.SubjAnswer;
 
@@ -32,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-     //   TextView tv=findViewById(R.id.tv);
+        //   TextView tv=findViewById(R.id.tv);
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,12 +68,33 @@ public class MainActivity extends AppCompatActivity
         PostsFeedAdapter postFeedAdapter = new PostsFeedAdapter(this,posts);
         rv.setAdapter(postFeedAdapter);
     }
+
+
+
+    void getPostDataFromFirebase(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("data");
+        ref.keepSynced(true);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Post posts = dataSnapshot.getValue(Post.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 //temp method
 
     List<Question> getListOfPost(){
         List<Question> posts=new ArrayList<>();
         SubjAnswer answer=new SubjAnswer(1,"Pub-Sub message broker");
-        Question q=new Question(2,"What is Kafka?",answer,"Ketan","27-11-2017");
+        Question q=new Question(2,"What is Kafka?",answer,"Ketan","2017-11-27");
 
 
         posts.add(q);
@@ -132,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
