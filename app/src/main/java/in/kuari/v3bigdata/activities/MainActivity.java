@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,13 +18,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.adapter.PostsFeedAdapter;
+import in.kuari.v3bigdata.firebase.FireBaseDB;
 import in.kuari.v3bigdata.firebase.FirebaseHelper;
 import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.Question;
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity
 
         ProgressDialog  dialog= ProgressDialog.show(this,"", "Loading...", true, false);
 
-        dialog.show();
+       /// dialog.show();
 
 
         helper.getMenuList(navigationView,dialog);
@@ -64,9 +68,15 @@ public class MainActivity extends AppCompatActivity
         RecyclerView rv = findViewById(R.id.allpost);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
-        List<Question> posts=getListOfPost();
+        dialog.show();
+
+        List<Question> posts=new ArrayList<>();
         PostsFeedAdapter postFeedAdapter = new PostsFeedAdapter(this,posts);
+        getListOfPost1(posts,dialog,postFeedAdapter);
+
         rv.setAdapter(postFeedAdapter);
+        helper.writeNewPost();
+
     }
 
 
@@ -105,6 +115,48 @@ public class MainActivity extends AppCompatActivity
         posts.add(q);
         return posts;
     }
+
+    List<Question> getListOfPost1(final List<Question> posts,final ProgressDialog dialog, final RecyclerView.Adapter adp){
+        SubjAnswer answer=new SubjAnswer(1,"Pub-Sub message broker");
+        Question q=new Question(2,"What is Kafka?",answer,"Ketan","2017-11-27");
+
+        DatabaseReference db = FireBaseDB.getInstance().getReference("data").child("questions");
+        db.keepSynced(true);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot dd:dataSnapshot.getChildren()) {
+                    try {
+                        Log.v("ddqq1", dd.getValue().toString());
+
+
+                        GenericTypeIndicator<Question<SubjAnswer>> genericTypeIndicator = new GenericTypeIndicator<Question<SubjAnswer>>() {
+                        };
+
+
+
+                        Question<SubjAnswer> qq =dd.getValue(genericTypeIndicator);
+
+                        Log.v("ddqq2", qq.toString());
+
+                        posts.add(qq);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                adp.notifyDataSetChanged();
+                dialog.hide();
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return posts;
+    }
+
 
     @Override
     public void onBackPressed() {

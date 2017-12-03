@@ -9,7 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -22,10 +22,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.model.NavMenu;
+import in.kuari.v3bigdata.model.Topic;
 
 /**
  * Created by ketan on 25/11/17.
@@ -38,9 +41,8 @@ public class FirebaseHelper {
     static String val;
     private Context context;
     public FirebaseHelper(Context context){
-        database=FirebaseDatabase.getInstance();
-        database.setPersistenceEnabled(true);
-        this.context=context;
+         this.context=context;
+         database=FireBaseDB.getInstance();
 
 
     }
@@ -121,7 +123,7 @@ public class FirebaseHelper {
                 }
                 populateMenu( navigationView,navMenus);
                 CheckBox view = (CheckBox) navigationView.getMenu().getItem(2).getActionView();
-               view.setChecked(true);
+                view.setChecked(true);
 
                 dialog.hide();
 
@@ -142,20 +144,49 @@ public class FirebaseHelper {
 
     }
 
+    void getTopicList( final ArrayAdapter<String> adp){
 
-    /*private void writeNewPost(String userId, String username, String title, String body) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = mDatabase.child("posts").push().getKey();
-        Post post = new Post(userId, username, title, body);
-        Map<String, Object> postValues = post.toMap();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("data").child("topics");
+        ref.keepSynced(true);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                    Topic topic = ds.getValue(Topic.class);
+                    //   topics.add(topic.getName());
+
+                    Log.v("topics",topic.toString());
+                }
+                //notify adpater that data changed
+                adp.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+
+    public   void writeNewPost(/*String userId, String username, String title, String body*/) {
+
+
+        DatabaseReference mDatabase=database.getReference("data");
+        String key = mDatabase.child("topics").push().getKey();
+        Topic topic=new Topic("12","sample");
+
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put("/topics/" + key, topic);
+      //  childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
     }
-*/
+
 
 }

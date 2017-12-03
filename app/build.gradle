@@ -35,8 +35,13 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.6.0'
     compile 'com.google.firebase:firebase-ads:11.6.0'
 
+
     //compile "org.projectlombok:lombok:1.16.16"
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.firebaseui:firebase-ui-database:3.1.0'
+
+    // compile 'com.firebaseui:firebase-ui-database:1.0.1'
+
 
 
 }

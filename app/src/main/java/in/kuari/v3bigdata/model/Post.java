@@ -14,9 +14,10 @@ public class Post implements Serializable {
 
     private long postId;
     private String postTitle;
+    private List<String> tags;
+    private String topic;
     private User postedBy;
     private String postedOn;
-    private List<String> tags;
 
     public Post() {
     }
@@ -25,6 +26,14 @@ public class Post implements Serializable {
         this.postId=postId;
         this.postedBy = new User(postedBy);
         this.postedOn = postedOn;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public String getPostTitle() {
@@ -61,13 +70,13 @@ public class Post implements Serializable {
 
 
     public String getPostedOn() {
-        try {
+        /*try {
             String pon=Utility.timeAgo(postedOn);
             return pon;
         } catch (ParseException e) {
 
 
-        }
+        }*/
         return postedOn;
     }
 

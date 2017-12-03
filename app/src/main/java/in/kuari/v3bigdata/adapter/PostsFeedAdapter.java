@@ -19,6 +19,7 @@ import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.PostType;
 import in.kuari.v3bigdata.model.Question;
 import in.kuari.v3bigdata.model.SubjAnswer;
+import in.kuari.v3bigdata.utils.Utility;
 
 /**
  * Created by ketan on 26/11/17.
@@ -69,33 +70,37 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
 
     @Override
     public void onBindViewHolder(PostFeedHolder holder, int position) {
+        try {
 
-        final Post post = posts.get(position);
-        holder.postedBy.setText(post.getPostedBy().getName());
-        holder.postedOn.setText(post.getPostedOn());
 
-        if(post instanceof Question) {
-            Question question= (Question) post;
+            final Post post = posts.get(position);
+            holder.postedBy.setText(post.getPostedBy().getName());
+            holder.postedOn.setText(Utility.timeAgo(post.getPostedOn()));
 
-            holder.postTitle.setText(question.getQuestion());
+            if (post instanceof Question) {
+                Question question = (Question) post;
 
-            Answer answer=question.getAnswer();
-            if(answer instanceof SubjAnswer) {
-                SubjAnswer subjAnswer = (SubjAnswer) answer;
-                holder.postText.setText(subjAnswer.getAnswerText());
-            }else
-            if(answer instanceof MCQAnswer) {
-                MCQAnswer mcqAnswer = (MCQAnswer) answer;
+                holder.postTitle.setText(question.getQuestion());
+
+                Answer answer = question.getAnswer();
+                if (answer instanceof SubjAnswer) {
+                    SubjAnswer subjAnswer = (SubjAnswer) answer;
+                    holder.postText.setText(subjAnswer.getAnswerText());
+                } else if (answer instanceof MCQAnswer) {
+                    MCQAnswer mcqAnswer = (MCQAnswer) answer;
+                }
+
+
             }
-
-
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openPostPage(post);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openPostPage(post);
-            }
-        });
     }
 
     private void openPostPage(Post post) {
@@ -110,7 +115,7 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
     public int getItemCount() {
         return posts.size();
     }
-    //Todo multipl etypes of post..Questions with MCQ or Subjective
+    //Todo multiple types of post..Questions with MCQ or Subjective
     static class PostFeedHolder extends RecyclerView.ViewHolder{
         private TextView postTitle;
         private TextView postText;

@@ -14,7 +14,7 @@
             android:text="Post Title"
             />
         <EditText
-            android:id="@+id/title"
+            android:id="@+id/titlePo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <TextView
@@ -45,7 +45,12 @@
             android:id="@+id/topicList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></Spinner>
+        <ListView
+            android:id="@+id/list1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
         <Button
+            android:id="@+id/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Submit"
