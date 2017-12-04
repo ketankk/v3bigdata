@@ -12,6 +12,10 @@ public class NavMenu {
     public NavMenu(){
 
     }
+
+    public NavMenu(int id){
+        this.id=id;
+    }
     public NavMenu(int id, String icon, String title) {
         this.id = id;
         this.icon = icon;

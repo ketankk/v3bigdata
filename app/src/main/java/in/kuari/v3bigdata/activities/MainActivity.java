@@ -10,32 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.adapter.PostsFeedAdapter;
-import in.kuari.v3bigdata.firebase.FireBaseDB;
 import in.kuari.v3bigdata.firebase.FirebaseHelper;
-import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.Question;
-import in.kuari.v3bigdata.model.SubjAnswer;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private ProgressDialog  dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,107 +43,31 @@ public class MainActivity extends AppCompatActivity
 
         FirebaseHelper helper=new FirebaseHelper(this);
 
-        ProgressDialog  dialog= ProgressDialog.show(this,"", "Loading...", true, false);
-
-       /// dialog.show();
-
-
-        helper.getMenuList(navigationView,dialog);
-
-
-
+        dialog= ProgressDialog.show(this,"", "Loading...", true, false);
+        helper.getNavMenuList(navigationView,dialog);
 
         RecyclerView rv = findViewById(R.id.allpost);
         RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
-        dialog.show();
+        if(dialog!=null)
+            dialog.show();
 
         List<Question> posts=new ArrayList<>();
         PostsFeedAdapter postFeedAdapter = new PostsFeedAdapter(this,posts);
-        getListOfPost1(posts,dialog,postFeedAdapter);
+        helper.getListOfPost(posts,dialog,postFeedAdapter);
 
         rv.setAdapter(postFeedAdapter);
-        helper.writeNewPost();
+        // helper.writeNewPost();
 
     }
 
-
-
-    void getPostDataFromFirebase(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("data");
-        ref.keepSynced(true);
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Post posts = dataSnapshot.getValue(Post.class);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-//temp method
-
-    List<Question> getListOfPost(){
-        List<Question> posts=new ArrayList<>();
-        SubjAnswer answer=new SubjAnswer(1,"Pub-Sub message broker");
-        Question q=new Question(2,"What is Kafka?",answer,"Ketan","2017-11-27");
-
-
-        posts.add(q);
-        posts.add(q);
-        posts.add(q);
-        posts.add(q);
-        posts.add(q);
-        posts.add(q);
-        return posts;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(dialog!=null)
+            dialog.dismiss();
     }
 
-    List<Question> getListOfPost1(final List<Question> posts,final ProgressDialog dialog, final RecyclerView.Adapter adp){
-        SubjAnswer answer=new SubjAnswer(1,"Pub-Sub message broker");
-        Question q=new Question(2,"What is Kafka?",answer,"Ketan","2017-11-27");
-
-        DatabaseReference db = FireBaseDB.getInstance().getReference("data").child("questions");
-        db.keepSynced(true);
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot dd:dataSnapshot.getChildren()) {
-                    try {
-                        Log.v("ddqq1", dd.getValue().toString());
-
-
-                        GenericTypeIndicator<Question<SubjAnswer>> genericTypeIndicator = new GenericTypeIndicator<Question<SubjAnswer>>() {
-                        };
-
-
-
-                        Question<SubjAnswer> qq =dd.getValue(genericTypeIndicator);
-
-                        Log.v("ddqq2", qq.toString());
-
-                        posts.add(qq);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                adp.notifyDataSetChanged();
-                dialog.hide();
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return posts;
-    }
 
 
     @Override

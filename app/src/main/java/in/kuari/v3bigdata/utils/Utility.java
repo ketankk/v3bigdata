@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
  */
 
 public class Utility {
-   
+
     public   static String timeAgo(String time) throws ParseException {
         if (time==null)
             time=System.currentTimeMillis()+"";

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import in.kuari.v3bigdata.R;
-import in.kuari.v3bigdata.firebase.FireBaseDB;
+import in.kuari.v3bigdata.firebase.FireBaseInstances;
 import in.kuari.v3bigdata.model.Question;
 import in.kuari.v3bigdata.model.SubjAnswer;
 import in.kuari.v3bigdata.model.User;
@@ -63,8 +63,8 @@ public class TutorActivity extends AppCompatActivity {
 
     private void savedata(String quesTitle, String quesAns, String quesTags, String topic) {
 
-        DatabaseReference mDatabase = FireBaseDB.getInstance().getReference("data");
-        String key = mDatabase.child("questions").push().getKey();
+        DatabaseReference mDatabase = FireBaseInstances.getQuestions();
+        String key = mDatabase.push().getKey();
 
         Question ques = getPost(quesTitle, quesAns, quesTags, topic);
 

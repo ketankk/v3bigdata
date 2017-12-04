@@ -3,11 +3,15 @@ package in.kuari.v3bigdata.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import in.kuari.v3bigdata.R;
+import in.kuari.v3bigdata.adapter.TagsAdapter;
 import in.kuari.v3bigdata.model.Answer;
 import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.Question;
@@ -49,6 +53,13 @@ public class FullPostActivity extends AppCompatActivity {
         postedOn.setText(question.getPostedOn());
         TextView postedBy = findViewById(R.id.postedBy);
         postedBy.setText(question.getPostedBy().getName());
+
+        RecyclerView rv = findViewById(R.id.tags);
+        LinearLayoutManager lm=new LinearLayoutManager(this, LinearLayout.HORIZONTAL,false);
+        rv.setLayoutManager(lm);
+        TagsAdapter adp=new TagsAdapter(question.getTags());
+        rv.setAdapter(adp);
+
 
     }
 }

@@ -2,6 +2,7 @@ package in.kuari.v3bigdata.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,11 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
             holder.postedBy.setText(post.getPostedBy().getName());
             holder.postedOn.setText(Utility.timeAgo(post.getPostedOn()));
 
+            LinearLayoutManager lm=new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false);
+            holder.tags.setLayoutManager(lm);
+
+            holder.tags.setAdapter(new TagsAdapter(post.getTags()));
+
             if (post instanceof Question) {
                 Question question = (Question) post;
 
@@ -121,13 +127,12 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
         private TextView postText;
         private TextView postedBy;
         private TextView postedOn;
-
-
-
-
+        private RecyclerView tags;
 
         public PostFeedHolder(View itemView) {
             super(itemView);
+            tags=itemView.findViewById(R.id.tags);
+
             postTitle=itemView.findViewById(R.id.postTitle);
             postText=itemView.findViewById(R.id.postText);
             postedBy=itemView.findViewById(R.id.postedBy);
@@ -135,3 +140,5 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
         }
     }
 }
+
+
