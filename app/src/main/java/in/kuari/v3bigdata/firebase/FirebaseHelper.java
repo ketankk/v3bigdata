@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,10 +26,12 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.model.NavMenu;
@@ -42,27 +45,28 @@ import in.kuari.v3bigdata.utils.Constants;
  */
 
 public class FirebaseHelper {
-    FirebaseDatabase database;
-
-    private TextView tView;
     static String val;
+    FirebaseDatabase database;
+    private TextView tView;
     private Context context;
-    public FirebaseHelper(Context context){
-        this.context=context;
+
+    public FirebaseHelper(Context context) {
+        this.context = context;
 
 
     }
-    public  void main(TextView tv) {
+
+    public void main(TextView tv) {
         DatabaseReference dbRef = database.getReference("data");
         dbRef.keepSynced(true);
 
-        tView=tv;
+        tView = tv;
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 val = dataSnapshot.getValue(String.class);
-                Log.d("DbValues",val);
+                Log.d("DbValues", val);
                 tView.setText(val);
 
 
@@ -70,23 +74,23 @@ public class FirebaseHelper {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error",databaseError.getMessage());
+                Log.e("Error", databaseError.getMessage());
             }
         });
     }
 
-    void populateMenu(NavigationView navigationView, List<NavMenu> menus){
+    void populateMenu(NavigationView navigationView, List<NavMenu> menus) {
         Menu menu = navigationView.getMenu();
-        for(NavMenu navMenu:menus) {
+        for (NavMenu navMenu : menus) {
 
             final MenuItem menuItem = menu.add(R.id.topicList, Menu.NONE, Menu.NONE, "");
 
             menuItem.setTitle(navMenu.getTitle());
             menuItem.setActionView(R.layout.checkbox);
             //set id for each checkbox
-            menuItem.getActionView().setId(navMenu.getId());
+            //  menuItem.getActionView().setId(navMenu.getId());
 
-            String ImageURL=navMenu.getIcon();
+            String ImageURL = navMenu.getIcon();
 
 
             Picasso.with(context)
@@ -113,22 +117,21 @@ public class FirebaseHelper {
 
     }
 
-    public void getNavMenuList(final NavigationView navigationView,final ProgressDialog dialog){
-        DatabaseReference dbRef=FireBaseInstances.getNavMenuList();
+    public void getNavMenuList(final NavigationView navigationView, final ProgressDialog dialog) {
+        DatabaseReference dbRef = FireBaseInstances.getNavMenuList();
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<NavMenu> navMenus=new ArrayList<>();
-                for(DataSnapshot data:dataSnapshot.getChildren()){
-                    NavMenu navMenu=data.getValue(NavMenu.class);
+                List<NavMenu> navMenus = new ArrayList<>();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    NavMenu navMenu = data.getValue(NavMenu.class);
                     //System.out.println(navMenu.toString());
                     navMenus.add(navMenu);
 
                 }
-                populateMenu( navigationView,navMenus);
-                setMenuChecked(navigationView,navMenus);
+                populateMenu(navigationView, navMenus);
+                setMenuChecked(navigationView, navMenus);
                 dialog.hide();
-
 
 
                 //TODO Write some data in posts key and filter is based on selected options from menu
@@ -145,46 +148,73 @@ public class FirebaseHelper {
 
 
     }
+    private int i=0;
 
-    private void setMenuChecked(NavigationView navigationView,List<NavMenu> navMenu) {
+    private void setMenuChecked(NavigationView navigationView, List<NavMenu> navMenu) {
 
-        SharedPreferences sp = context.getSharedPreferences(Constants.NavMenuPref,Context.MODE_PRIVATE);
-        Set<String> chekcedItems = sp.getStringSet("LIST", null);
-        for(String itemid:chekcedItems) {
-            int i=0;navMenu.indexOf(new NavMenu(INtitemid));
+        SharedPreferences sp = context.getSharedPreferences(Constants.NavMenuPref, Context.MODE_PRIVATE);
+        Set<String> chekcedItems = sp.getStringSet("LIST", new TreeSet<>());
+        Log.v("CheckdItems are", chekcedItems.toString());
+        for (String itemid : chekcedItems) {
+            int i = navMenu.indexOf(new NavMenu(itemid));
             CheckBox view = (CheckBox) navigationView.getMenu().getItem(i).getActionView();
             view.setChecked(true);
-        }
 
+        }
+        for(i=0;i<navigationView.getMenu().size();i++){
+            CheckBox view = (CheckBox) navigationView.getMenu().getItem(i).getActionView();
+            view.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                //final int pos=i;
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    Log.v("Check","Clicked");
+                    Set<String> chekcedItems = sp.getStringSet("LIST", new TreeSet<>());
+                    Log.v("Compound id",view.getId()+"--");
+                    String itemid=navMenu.get(i-1).getId();
+                    if (b) {
+                        Log.v("ItemChekedId", itemid);
+                        chekcedItems.add(itemid);
+
+                    } else {
+                        Log.v("ItemUnChekedId", itemid);
+
+                        chekcedItems.remove(itemid);
+                    }
+                    sp.edit().putStringSet("LIST",chekcedItems).apply();
+
+                }
+            });
+        }
     }
 
-    public void getListOfPost(final List<Question> posts,final ProgressDialog dialog, final RecyclerView.Adapter adp){
+    public void getListOfPost(final List<Question> posts, final ProgressDialog dialog, final RecyclerView.Adapter adp) {
 
         DatabaseReference db = FireBaseInstances.getQuestions();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot dd:dataSnapshot.getChildren()) {
+                for (DataSnapshot dd : dataSnapshot.getChildren()) {
                     try {
                         Log.v("Question Received", dd.getValue().toString());
 
 
                         GenericTypeIndicator<Question<SubjAnswer>> genericTypeIndicator = new GenericTypeIndicator<Question<SubjAnswer>>() {
                         };
-                        Question<SubjAnswer> qq =dd.getValue(genericTypeIndicator);
+                        Question<SubjAnswer> qq = dd.getValue(genericTypeIndicator);
 
                         Log.v("Parsed Question", qq.toString());
 
                         posts.add(qq);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 adp.notifyDataSetChanged();
-                if(dialog!=null)
+                if (dialog != null)
                     dialog.hide();
 
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -193,18 +223,18 @@ public class FirebaseHelper {
 
     }
 
-    public void getTopicList( final ArrayAdapter<String> adp){
+    public void getTopicList(final ArrayAdapter<String> adp) {
 
         DatabaseReference ref = FireBaseInstances.getTopics();
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds:dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Topic topic = ds.getValue(Topic.class);
                     //   topics.add(topic.getName());
 
-                    Log.v("topics",topic.toString());
+                    Log.v("topics", topic.toString());
                 }
                 //notify adpater that data changed
                 adp.notifyDataSetChanged();
@@ -221,13 +251,12 @@ public class FirebaseHelper {
     }
 
 
+    public void writeNewPost(/*String userId, String username, String title, String body*/) {
 
-    public   void writeNewPost(/*String userId, String username, String title, String body*/) {
 
-
-        DatabaseReference mDatabase=FireBaseInstances.getTopics();
+        DatabaseReference mDatabase = FireBaseInstances.getTopics();
         String key = mDatabase.push().getKey();
-        Topic topic=new Topic("12","sample");
+        Topic topic = new Topic("12", "sample");
 
 
         Map<String, Object> childUpdates = new HashMap<>();
