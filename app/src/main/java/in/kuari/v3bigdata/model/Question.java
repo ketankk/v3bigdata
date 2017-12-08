@@ -1,5 +1,7 @@
 package in.kuari.v3bigdata.model;
 
+import android.text.TextUtils;
+
 /**
  * Created by ketan on 26/11/17.
  */
@@ -34,6 +36,11 @@ public class Question<T extends Answer> extends Post{
         this.answer = answer;
     }
 
+    public boolean contains(String text){
+        if(TextUtils.isEmpty(text))
+            return false;
+        return getPostTitle().contains(text) || getPostedBy().getName().contains(text);
+    }
     @Override
     public String toString() {
         return "Question{" +

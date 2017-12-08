@@ -25,8 +25,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,7 @@ import java.util.TreeSet;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.model.NavMenu;
+import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.Question;
 import in.kuari.v3bigdata.model.SubjAnswer;
 import in.kuari.v3bigdata.model.Topic;
@@ -209,6 +214,22 @@ public class FirebaseHelper {
                         e.printStackTrace();
                     }
                 }
+                Collections.sort(posts, new Comparator<Question>() {
+                    @Override
+                    public int compare(Question ques1, Question ques2) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        try {
+                            long post1on = sdf.parse(ques1.getPostedOn()).getTime();
+                            long post2on = sdf.parse(ques2.getPostedOn()).getTime();
+                           // Log.v("P=="+ques1.toString()+"||"+ques2.toString(),post1on+"--"+post2on+"=="+(post2on-post1on));
+                            return (post2on-post1on)>0?1:-1;
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            return 0;
+                        }
+                    }
+                });
                 adp.notifyDataSetChanged();
                 if (dialog != null)
                     dialog.hide();

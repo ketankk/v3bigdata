@@ -5,7 +5,7 @@ package in.kuari.v3bigdata.model;
  * Created by ketan on 25/11/17.
  */
 public class NavMenu {
-    private int id;
+    private String id;
     private String icon;
     private String title;
     private boolean checkBox;
@@ -13,20 +13,20 @@ public class NavMenu {
 
     }
 
-    public NavMenu(int id){
+    public NavMenu(String id){
         this.id=id;
     }
-    public NavMenu(int id, String icon, String title) {
+    public NavMenu(String id, String icon, String title) {
         this.id = id;
         this.icon = icon;
         this.title = title;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,6 +52,22 @@ public class NavMenu {
 
     public void setCheckBox(boolean checkBox) {
         this.checkBox = checkBox;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NavMenu navMenu = (NavMenu) o;
+
+        return id.equals(navMenu.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     @Override

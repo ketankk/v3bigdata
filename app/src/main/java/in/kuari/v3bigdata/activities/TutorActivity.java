@@ -49,28 +49,26 @@ public class TutorActivity extends AppCompatActivity {
         EditText tags = findViewById(R.id.tags);
         final Editable quesTags = tags.getText();
         final Object seleItem = spinner.getSelectedItem();
+        EditText referURL = findViewById(R.id.referURL);
+        Editable url = referURL.getText();
 
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                savedata(quesTitle.toString(), quesAns.toString(), quesTags.toString(), seleItem.toString());
-            }
-        });
+
+        submit.setOnClickListener(view -> savedata(quesTitle.toString(), quesAns.toString(), quesTags.toString(), seleItem.toString(),url.toString()));
 
 
     }
 
-    private void savedata(String quesTitle, String quesAns, String quesTags, String topic) {
+    private void savedata(String quesTitle, String quesAns, String quesTags, String topic, String url) {
 
         DatabaseReference mDatabase = FireBaseInstances.getQuestions();
         String key = mDatabase.push().getKey();
 
-        Question ques = getPost(quesTitle, quesAns, quesTags, topic);
+        Question ques = getPost(quesTitle, quesAns, quesTags, topic,url);
 
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/questions/" + key, ques);
+        childUpdates.put("/" + key, ques);
         //  childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
@@ -79,7 +77,7 @@ public class TutorActivity extends AppCompatActivity {
 
     }
 
-    private Question getPost(String quesTitle, String quesAns, String quesTags, String topic) {
+    private Question getPost(String quesTitle, String quesAns, String quesTags, String topic, String url) {
 
         Question ques = new Question();
 
@@ -89,8 +87,9 @@ public class TutorActivity extends AppCompatActivity {
         ques.setAnswer(ans);
         ques.setTags(Arrays.asList(quesTags.split(",")));
         ques.setQuestion(quesTitle);
-        ques.setPostedBy(new User("VJ"));
+        ques.setPostedBy(new User("KK"));
         ques.setTopic(topic);
+        ques.setReferUrl(url);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long timeStamp=System.currentTimeMillis();
         ques.setPostedOn( sdf.format(timeStamp));

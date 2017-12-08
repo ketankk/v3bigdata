@@ -6,11 +6,11 @@
 
     <group android:id="@+id/topicList"
         android:checkableBehavior="all">
-        <item
+       <!-- <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_menu_send"
             android:title="Send"
-            app:actionViewClass="android.widget.CheckBox"/>
+            app:actionViewClass="android.widget.CheckBox"/>-->
     </group>
 
 </menu>

@@ -2,6 +2,8 @@ package in.kuari.v3bigdata.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 
 import in.kuari.v3bigdata.utils.Utility;
@@ -16,6 +18,7 @@ public class Post implements Serializable {
     private String postTitle;
     private List<String> tags;
     private String topic;
+    private String referUrl;
     private User postedBy;
     private String postedOn;
 
@@ -26,6 +29,14 @@ public class Post implements Serializable {
         this.postId=postId;
         this.postedBy = new User(postedBy);
         this.postedOn = postedOn;
+    }
+
+    public String getReferUrl() {
+        return referUrl;
+    }
+
+    public void setReferUrl(String referUrl) {
+        this.referUrl = referUrl;
     }
 
     public String getTopic() {
@@ -82,6 +93,23 @@ public class Post implements Serializable {
 
     public void setPostedOn(String postedOn) {
         this.postedOn = postedOn;
+    }
+
+    public int compare(Object o, Object t1) {
+        Post post1= (Post) o;
+        Post post2= (Post) t1;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            long post2on = sdf.parse(post2.postedOn).getTime();
+            long post1on = sdf.parse(post1.postedOn).getTime();
+            return (int)(post1on-post2on);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+
     }
 }
 

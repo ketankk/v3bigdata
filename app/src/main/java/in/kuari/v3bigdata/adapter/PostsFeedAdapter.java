@@ -2,19 +2,24 @@ package in.kuari.v3bigdata.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import in.kuari.v3bigdata.R;
 import in.kuari.v3bigdata.activities.FullPostActivity;
 import in.kuari.v3bigdata.model.Answer;
+import in.kuari.v3bigdata.model.ExampleModel;
 import in.kuari.v3bigdata.model.MCQAnswer;
 import in.kuari.v3bigdata.model.Post;
 import in.kuari.v3bigdata.model.PostType;
@@ -26,7 +31,7 @@ import in.kuari.v3bigdata.utils.Utility;
  * Created by ketan on 26/11/17.
  */
 
-public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.PostFeedHolder> {
+public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.PostFeedHolder>implements Filterable {
 
 
 
@@ -109,6 +114,9 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
         }
     }
 
+
+
+
     private void openPostPage(Post post) {
         Intent intent=new Intent(context, FullPostActivity.class);
         intent.putExtra("postId",post.getPostId());
@@ -121,6 +129,25 @@ public class PostsFeedAdapter extends RecyclerView.Adapter<PostsFeedAdapter.Post
     public int getItemCount() {
         return posts.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                return null;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                List<Question> list= (List<Question>)filterResults.values;
+                PostsFeedAdapter.this.notifyDataSetChanged();
+
+            }
+        };
+
+    }
+
     //Todo multiple types of post..Questions with MCQ or Subjective
     static class PostFeedHolder extends RecyclerView.ViewHolder{
         private TextView postTitle;

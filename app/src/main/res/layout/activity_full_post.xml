@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:textIsSelectable="true"
+
     tools:context="in.kuari.v3bigdata.activities.FullPostActivity">
     <RelativeLayout
         android:id="@+id/header"
@@ -72,5 +74,18 @@
         </ScrollView>
 
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/reflink"
+        android:clickable="true"
+        android:focusable="true"
+        android:textIsSelectable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="http://v3bigdata.in"
+        android:layout_centerHorizontal="true"
+        android:autoLink="web"
+        android:textColor="@color/colorAccent"
+        android:layout_marginBottom="3dp"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
